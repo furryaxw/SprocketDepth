@@ -5,7 +5,7 @@
 ## 功能
 
 - 将 HDRP `_CameraDepthTexture` 转换为单通道 `RFloat` 归一化线性深度纹理。
-- 支持只生成纹理，或将深度结果以近白远黑的灰度图显示到当前画面。
+- 支持近白远黑或近黑远白两种极性，并可只生成纹理或显示到当前画面。
 - 自动适配 viewport 尺寸变化，并管理 ComputeShader、Material 和 RenderTexture 的生命周期。
 - 提供帧信息和错误信息，方便宿主模组诊断接入问题。
 
@@ -18,6 +18,8 @@ value = saturate(1 - linearEyeDepthMeters / MaxDistanceMeters)
 ```
 
 Camera 附近为 `1`，达到配置距离后为 `0`。输出值是归一化线性深度，不是直接以米为单位的距离。
+构造时传入 `whiteNear: false` 可切换为
+`saturate(linearEyeDepthMeters / MaxDistanceMeters)`。
 
 ## 接入
 
@@ -60,7 +62,7 @@ dotnet build .\SprocketDepth.csproj --configuration Release
 - [兼容性与限制](docs/compatibility.md)
 - [故障排查](docs/troubleshooting.md)
 
-当前验证环境为 Sprocket `0.2.53.1`、Unity `2022.3.62f2`、MelonLoader `0.7.2/net6` 和 Windows D3D11。
+当前验证环境为 Sprocket `0.2.53.2`、Unity `2022.3.62f2`、MelonLoader `0.7.2/net6` 和 Windows D3D11。
 
 ## License
 

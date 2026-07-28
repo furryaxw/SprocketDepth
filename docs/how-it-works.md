@@ -33,7 +33,7 @@ HDRP 的 `DepthOfFieldCoC.compute` 内部调用：
 float linearEyeDepth = LinearEyeDepth(depth, _ZBufferParams);
 ```
 
-库选择 `KMainManual` 并传入：
+库选择 `KMainManual`。近白模式传入：
 
 ```text
 _Params = (-1, 0, MaxDistanceMeters, 0)
@@ -46,6 +46,9 @@ nearCoC = 0
 farCoC = saturate((linearDepth - range) / (0 - range))
        = saturate(1 - linearDepth / range)
 ```
+
+近黑模式传入 `_Params = (-1, 0, 0, MaxDistanceMeters)`，对应
+`saturate(linearDepth / range)`。
 
 以 300 米为例：
 

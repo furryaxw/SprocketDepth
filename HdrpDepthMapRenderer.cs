@@ -58,13 +58,29 @@ namespace SprocketDepth
         private bool disposed;
 
         /// <summary>
-        /// Creates a renderer with a fixed normalized depth range.
+        /// Creates a white-near renderer with a fixed normalized depth range.
         /// </summary>
         /// <param name="maxDistanceMeters">
         /// Positive finite distance that maps to black.
         /// </param>
         public HdrpDepthMapRenderer(
             float maxDistanceMeters = DefaultMaxDistanceMeters)
+            : this(maxDistanceMeters, whiteNear: true)
+        {
+        }
+
+        /// <summary>
+        /// Creates a renderer with a fixed normalized depth range and polarity.
+        /// </summary>
+        /// <param name="maxDistanceMeters">
+        /// Positive finite distance that maps to the far endpoint.
+        /// </param>
+        /// <param name="whiteNear">
+        /// True for 1-distance/range; false for distance/range.
+        /// </param>
+        public HdrpDepthMapRenderer(
+            float maxDistanceMeters,
+            bool whiteNear)
         {
             if (!float.IsFinite(maxDistanceMeters) || maxDistanceMeters <= 0.0f)
             {
@@ -75,16 +91,22 @@ namespace SprocketDepth
             }
 
             MaxDistanceMeters = maxDistanceMeters;
+            WhiteNear = whiteNear;
         }
 
         /// <summary>
-        /// Distance mapped to black in the normalized white-near texture.
+        /// Distance mapped to the far endpoint in the normalized texture.
         /// </summary>
         public float MaxDistanceMeters { get; }
 
         /// <summary>
+        /// True when near maps to white; false when far maps to white.
+        /// </summary>
+        public bool WhiteNear { get; }
+
+        /// <summary>
         /// The reusable RFloat texture populated by the most recent successful
-        /// call. Values are saturate(1 - linearEyeDepth / MaxDistanceMeters).
+        /// call. Values are either 1-distance/range or distance/range.
         /// </summary>
         public RenderTexture? NormalizedDepthTexture => normalizedDepthTexture;
 
@@ -161,7 +183,17 @@ namespace SprocketDepth
                 commandBuffer.SetComputeVectorParam(
                     linearizeCompute,
                     ComputeParamsId,
-                    new Vector4(-1.0f, 0.0f, MaxDistanceMeters, 0.0f));
+                    WhiteNear
+                        ? new Vector4(
+                            -1.0f,
+                            0.0f,
+                            MaxDistanceMeters,
+                            0.0f)
+                        : new Vector4(
+                            -1.0f,
+                            0.0f,
+                            0.0f,
+                            MaxDistanceMeters));
                 commandBuffer.DispatchCompute(
                     linearizeCompute,
                     linearizeKernel,
@@ -309,7 +341,9 @@ namespace SprocketDepth
                 autoGenerateMips = false
             };
             normalizedDepthTextureName =
-                $"SprocketDepth_NormalizedLinear_{MaxDistanceMeters:F0}m";
+                $"SprocketDepth_NormalizedLinear_" +
+                $"{(WhiteNear ? "WhiteNear" : "WhiteFar")}_" +
+                $"{MaxDistanceMeters:F0}m";
             normalizedDepthTexture = new RenderTexture(descriptor)
             {
                 hideFlags = HideFlags.HideAndDontSave,
