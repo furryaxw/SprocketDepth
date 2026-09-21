@@ -1,8 +1,6 @@
 namespace SprocketDepth
 {
-    /// <summary>
-    /// Describes the resources used by the most recently recorded depth map.
-    /// </summary>
+    // Describes the resources used by the most recently recorded depth map.
     public readonly struct HdrpDepthMapFrameInfo
     {
         internal HdrpDepthMapFrameInfo(
@@ -31,40 +29,40 @@ namespace SprocketDepth
             Output = output;
         }
 
-        /// <summary>Recorded viewport width in pixels.</summary>
+        // Recorded viewport width in pixels.
         public int Width { get; }
 
-        /// <summary>Recorded viewport height in pixels.</summary>
+        // Recorded viewport height in pixels.
         public int Height { get; }
 
-        /// <summary>Distance represented by black in the normalized map.</summary>
+        // Distance represented by black in the normalized map.
         public float MaxDistanceMeters { get; }
 
-        /// <summary>Hierarchy path of the camera that produced the map.</summary>
+        // Hierarchy path of the camera that produced the map.
         public string CameraName { get; }
 
-        /// <summary>Name of HDRP's source depth-pyramid texture.</summary>
+        // Name of HDRP's source depth-pyramid texture.
         public string SourceDepthTextureName { get; }
 
-        /// <summary>Name of the generated normalized RFloat texture.</summary>
+        // Name of the generated normalized RFloat texture.
         public string NormalizedDepthTextureName { get; }
 
-        /// <summary>Name of the compute shader used for linearization.</summary>
+        // Name of the compute shader used for linearization.
         public string ComputeShaderName { get; }
 
-        /// <summary>Compute kernel index used for linearization.</summary>
+        // Compute kernel index used for linearization.
         public int ComputeKernel { get; }
 
-        /// <summary>Name of the shader used for optional presentation.</summary>
+        // Name of the shader used for optional presentation.
         public string PresentationShaderName { get; }
 
-        /// <summary>Pass index used for optional presentation.</summary>
+        // Pass index used for optional presentation.
         public int PresentationPass { get; }
 
-        /// <summary>Output mode recorded for the frame.</summary>
+        // Output mode recorded for the frame.
         public DepthMapOutput Output { get; }
 
-        /// <summary>Builds a compact diagnostic description.</summary>
+        // Builds a compact diagnostic description.
         public override string ToString()
         {
             return $"camera={CameraName}, size={Width}x{Height}, " +

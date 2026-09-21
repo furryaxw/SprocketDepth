@@ -4,15 +4,21 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.HighDefinition;
 
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.Id", "furryaxw.sprocket-depth")]
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.DisplayName", "Sprocket Depth")]
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.Description", "Shared HDRP depth library for Sprocket mods.")]
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.Authors", "furryAxw")]
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.Repository", "furryaxw/SprocketDepth")]
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.Category", "library")]
+[assembly: System.Reflection.AssemblyMetadata("Sprocket.Mod.License", "GPL-3.0-only")]
+
 namespace SprocketDepth
 {
-    /// <summary>
-    /// Records native HDRP depth linearization and optional grayscale
-    /// presentation commands without rendering the scene a second time.
-    /// </summary>
+    // Records native HDRP depth linearization and optional grayscale
+    // presentation commands without rendering the scene a second time.
     public sealed class HdrpDepthMapRenderer : IDisposable
     {
-        /// <summary>Default white-near depth range.</summary>
+        // Default white-near depth range.
         public const float DefaultMaxDistanceMeters = 300.0f;
 
         private const string DepthTextureGlobalName = "_CameraDepthTexture";
@@ -57,27 +63,17 @@ namespace SprocketDepth
         private string normalizedDepthTextureName = "<unavailable>";
         private bool disposed;
 
-        /// <summary>
-        /// Creates a white-near renderer with a fixed normalized depth range.
-        /// </summary>
-        /// <param name="maxDistanceMeters">
-        /// Positive finite distance that maps to black.
-        /// </param>
+        // Creates a white-near renderer with a fixed normalized depth range.
+        // maxDistanceMeters: positive finite distance that maps to black.
         public HdrpDepthMapRenderer(
             float maxDistanceMeters = DefaultMaxDistanceMeters)
             : this(maxDistanceMeters, whiteNear: true)
         {
         }
 
-        /// <summary>
-        /// Creates a renderer with a fixed normalized depth range and polarity.
-        /// </summary>
-        /// <param name="maxDistanceMeters">
-        /// Positive finite distance that maps to the far endpoint.
-        /// </param>
-        /// <param name="whiteNear">
-        /// True for 1-distance/range; false for distance/range.
-        /// </param>
+        // Creates a renderer with a fixed normalized depth range and polarity.
+        // maxDistanceMeters: positive finite distance that maps to the far endpoint.
+        // whiteNear: true for 1-distance/range; false for distance/range.
         public HdrpDepthMapRenderer(
             float maxDistanceMeters,
             bool whiteNear)
@@ -94,38 +90,26 @@ namespace SprocketDepth
             WhiteNear = whiteNear;
         }
 
-        /// <summary>
-        /// Distance mapped to the far endpoint in the normalized texture.
-        /// </summary>
+        // Distance mapped to the far endpoint in the normalized texture.
         public float MaxDistanceMeters { get; }
 
-        /// <summary>
-        /// True when near maps to white; false when far maps to white.
-        /// </summary>
+        // True when near maps to white; false when far maps to white.
         public bool WhiteNear { get; }
 
-        /// <summary>
-        /// The reusable RFloat texture populated by the most recent successful
-        /// call. Values are either 1-distance/range or distance/range.
-        /// </summary>
+        // The reusable RFloat texture populated by the most recent successful
+        // call. Values are either 1-distance/range or distance/range.
         public RenderTexture? NormalizedDepthTexture => normalizedDepthTexture;
 
-        /// <summary>
-        /// Metadata for the most recently recorded frame.
-        /// </summary>
+        // Metadata for the most recently recorded frame.
         public HdrpDepthMapFrameInfo? LastFrameInfo { get; private set; }
 
-        /// <summary>
-        /// Failure text from the most recent unsuccessful call, otherwise an
-        /// empty string.
-        /// </summary>
+        // Failure text from the most recent unsuccessful call, otherwise an
+        // empty string.
         public string LastError { get; private set; } = string.Empty;
 
-        /// <summary>
-        /// Records depth-map commands into the Custom Pass command buffer.
-        /// Call this while HDRP is executing a camera-scoped Custom Pass after
-        /// the camera depth pyramid has been produced.
-        /// </summary>
+        // Records depth-map commands into the Custom Pass command buffer.
+        // Call this while HDRP is executing a camera-scoped Custom Pass after
+        // the camera depth pyramid has been produced.
         public bool TryRecord(
             CustomPassContext context,
             DepthMapOutput output = DepthMapOutput.TextureAndGrayscaleTarget)
@@ -174,6 +158,14 @@ namespace SprocketDepth
                     linearizeCompute,
                     linearizeKernel,
                     ComputeInputId,
+                    new RenderTargetIdentifier(depthAtlas));
+                // KMainManual reads _CameraDepthTexture directly when MSAA is
+                // disabled. Bind this pass's depth atlas explicitly instead of
+                // relying on whichever camera last set the global texture.
+                commandBuffer.SetComputeTextureParam(
+                    linearizeCompute,
+                    linearizeKernel,
+                    DepthTextureGlobalId,
                     new RenderTargetIdentifier(depthAtlas));
                 commandBuffer.SetComputeTextureParam(
                     linearizeCompute,
@@ -235,10 +227,8 @@ namespace SprocketDepth
             }
         }
 
-        /// <summary>
-        /// Releases the owned material and render texture. Call on Unity's
-        /// main thread after the last queued command that uses the texture.
-        /// </summary>
+        // Releases the owned material and render texture. Call on Unity's
+        // main thread after the last queued command that uses the texture.
         public void Dispose()
         {
             if (disposed)

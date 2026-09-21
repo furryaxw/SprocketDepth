@@ -1,19 +1,13 @@
 namespace SprocketDepth
 {
-    /// <summary>
-    /// Selects what a depth-map recording adds to the current command buffer.
-    /// </summary>
+    // Selects what a depth-map recording adds to the current command buffer.
     public enum DepthMapOutput
     {
-        /// <summary>
-        /// Generate the normalized depth texture without drawing it.
-        /// </summary>
+        // Generate the normalized depth texture without drawing it.
         TextureOnly = 0,
 
-        /// <summary>
-        /// Generate the texture and present it as grayscale to the currently
-        /// bound color target.
-        /// </summary>
+        // Generate the texture and present it as grayscale to the currently
+        // bound color target.
         TextureAndGrayscaleTarget = 1
     }
 }

@@ -11,7 +11,7 @@
 | 图形后端 | Windows D3D11 |
 | 输出维度 | 单 slice `Tex2DArray` |
 
-原始实现已在 `3.4.16` 视觉验收；抽库后的 `0.1.0 / 3.4.17` 也已由用户确认游戏内可用。`0.1.1` 的双构造函数兼容层已在 Sprocket `0.2.53.2` 中通过 LaserRangefinder 与 Thermal 宿主验证。
+`0.1.2` 的两个构造函数都已在 Sprocket `0.2.53.2` 中通过 LaserRangefinder 与 Thermal 宿主验证，深度图输出已由用户确认游戏内可用。
 
 ## 非稳定 HDRP 契约
 
