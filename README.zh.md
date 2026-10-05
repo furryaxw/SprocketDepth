@@ -1,0 +1,72 @@
+# SprocketDepth
+
+**中文** | [English](README.md)
+
+适用于《Sprocket》IL2CPP 模组的可复用 HDRP 深度图库。它复用当前 Camera 已生成的原生深度，不会使用第二台 Camera 重绘场景。
+
+## 功能
+
+- 将 HDRP `_CameraDepthTexture` 转换为单通道 `RFloat` 归一化线性深度纹理。
+- 支持近白远黑或近黑远白两种极性，并可只生成纹理或显示到当前画面。
+- 自动适配 viewport 尺寸变化，并管理 ComputeShader、Material 和 RenderTexture 的生命周期。
+- 提供帧信息和错误信息，方便宿主模组诊断接入问题。
+
+## 输出
+
+`NormalizedDepthTexture` 的数值为：
+
+```text
+value = saturate(1 - linearEyeDepthMeters / MaxDistanceMeters)
+```
+
+Camera 附近为 `1`，达到配置距离后为 `0`。输出值是归一化线性深度，不是直接以米为单位的距离。
+构造时传入 `whiteNear: false` 可切换为
+`saturate(linearEyeDepthMeters / MaxDistanceMeters)`。
+
+## 接入
+
+在目标 Camera 的 HDRP Custom Pass 中调用：
+
+```csharp
+using SprocketDepth;
+
+private readonly HdrpDepthMapRenderer depth = new(300.0f);
+
+bool recorded = depth.TryRecord(context, DepthMapOutput.TextureOnly);
+var normalizedDepth = depth.NormalizedDepthTexture;
+```
+
+调用者负责选择 Camera、创建 Custom Pass、决定注入时机，并在最后一个 GPU 命令完成后调用 `Dispose()`。
+
+作为其他插件的依赖时，把 `SprocketDepth.dll` 放在 `BepInEx\plugins` 目录。
+
+## 构建
+
+项目目标框架为 .NET 6，并引用本地 Sprocket BepInEx/IL2CPP 程序集。默认目录布局为：
+
+```text
+G:\Sprocket0.2.55.5\
+├── BepInEx\
+│   ├── core\
+│   └── plugins\
+└── mods\SprocketDepth\
+```
+
+```powershell
+dotnet build .\SprocketDepth.csproj --configuration Release
+```
+
+默认构建会把 DLL 部署到 `BepInEx\plugins`。使用 `-p:SkipLibraryDeploy=true` 可以只生成 DLL；仓库位于其他位置时可通过 `-p:SprocketGameRoot="G:\Sprocket0.2.55.5"` 指定游戏根目录。
+
+## 文档
+
+- [实现原理](docs/how-it-works.zh.md)
+- [IL2CPP / Custom Pass 接入](docs/integration.zh.md)
+- [兼容性与限制](docs/compatibility.zh.md)
+- [故障排查](docs/troubleshooting.zh.md)
+
+当前验证环境为 Sprocket `0.2.55.5`、Unity `6000.3.21f1`、BepInEx `6.0.0-be.788`（IL2CPP / net6）和 Windows D3D11。
+
+## License
+
+[GPL-3.0-only](LICENSE.txt)

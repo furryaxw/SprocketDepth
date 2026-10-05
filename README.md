@@ -1,29 +1,30 @@
 # SprocketDepth
 
-适用于《Sprocket》IL2CPP 模组的可复用 HDRP 深度图库。它复用当前 Camera 已生成的原生深度，不会使用第二台 Camera 重绘场景。
+[中文](README.zh.md) | **English**
 
-## 功能
+A reusable HDRP depth-texture library for Sprocket IL2CPP mods. It reuses the native depth the current Camera has already produced, and never redraws the scene with a second Camera.
 
-- 将 HDRP `_CameraDepthTexture` 转换为单通道 `RFloat` 归一化线性深度纹理。
-- 支持近白远黑或近黑远白两种极性，并可只生成纹理或显示到当前画面。
-- 自动适配 viewport 尺寸变化，并管理 ComputeShader、Material 和 RenderTexture 的生命周期。
-- 提供帧信息和错误信息，方便宿主模组诊断接入问题。
+## Features
 
-## 输出
+- Converts the HDRP `_CameraDepthTexture` into a single-channel `RFloat` normalized linear depth texture.
+- Supports either polarity (white-near/far-black or black-near/far-white), and can either generate the texture only or display it on the current view.
+- Adapts automatically to viewport size changes and manages the lifecycle of the ComputeShader, Material, and RenderTexture.
+- Exposes frame and error information so host mods can diagnose integration problems.
 
-`NormalizedDepthTexture` 的数值为：
+## Output
+
+The value of `NormalizedDepthTexture` is:
 
 ```text
 value = saturate(1 - linearEyeDepthMeters / MaxDistanceMeters)
 ```
 
-Camera 附近为 `1`，达到配置距离后为 `0`。输出值是归一化线性深度，不是直接以米为单位的距离。
-构造时传入 `whiteNear: false` 可切换为
-`saturate(linearEyeDepthMeters / MaxDistanceMeters)`。
+The value is `1` near the Camera and `0` at the configured distance. The output is a normalized linear depth, not a distance expressed in meters. Passing `whiteNear: false` at construction switches to
+`saturate(linearEyeDepthMeters / MaxDistanceMeters)`.
 
-## 接入
+## Integration
 
-在目标 Camera 的 HDRP Custom Pass 中调用：
+Call it from an HDRP Custom Pass on the target Camera:
 
 ```csharp
 using SprocketDepth;
@@ -34,13 +35,13 @@ bool recorded = depth.TryRecord(context, DepthMapOutput.TextureOnly);
 var normalizedDepth = depth.NormalizedDepthTexture;
 ```
 
-调用者负责选择 Camera、创建 Custom Pass、决定注入时机，并在最后一个 GPU 命令完成后调用 `Dispose()`。
+The caller is responsible for choosing the Camera, creating the Custom Pass, deciding the injection point, and calling `Dispose()` after the last GPU command has completed.
 
-作为其他插件的依赖时，把 `SprocketDepth.dll` 放在 `BepInEx\plugins` 目录。
+When used as a dependency of another plugin, place `SprocketDepth.dll` in the `BepInEx\plugins` directory.
 
-## 构建
+## Building
 
-项目目标框架为 .NET 6，并引用本地 Sprocket BepInEx/IL2CPP 程序集。默认目录布局为：
+The project targets .NET 6 and references the local Sprocket BepInEx/IL2CPP assemblies. The default directory layout is:
 
 ```text
 G:\Sprocket0.2.55.5\
@@ -54,16 +55,16 @@ G:\Sprocket0.2.55.5\
 dotnet build .\SprocketDepth.csproj --configuration Release
 ```
 
-默认构建会把 DLL 部署到 `BepInEx\plugins`。使用 `-p:SkipLibraryDeploy=true` 可以只生成 DLL；仓库位于其他位置时可通过 `-p:SprocketGameRoot="G:\Sprocket0.2.55.5"` 指定游戏根目录。
+The default build deploys the DLL to `BepInEx\plugins`. Use `-p:SkipLibraryDeploy=true` to only produce the DLL; if the repository lives elsewhere, point at the game root with `-p:SprocketGameRoot="G:\Sprocket0.2.55.5"`.
 
-## 文档
+## Documentation
 
-- [实现原理](docs/how-it-works.md)
-- [IL2CPP / Custom Pass 接入](docs/integration.md)
-- [兼容性与限制](docs/compatibility.md)
-- [故障排查](docs/troubleshooting.md)
+- [How it works](docs/how-it-works.en.md)
+- [IL2CPP / Custom Pass integration](docs/integration.en.md)
+- [Compatibility and limitations](docs/compatibility.en.md)
+- [Troubleshooting](docs/troubleshooting.en.md)
 
-当前验证环境为 Sprocket `0.2.55.5`、Unity `6000.3.21f1`、BepInEx `6.0.0-be.788`（IL2CPP / net6）和 Windows D3D11。
+The currently verified environment is Sprocket `0.2.55.5`, Unity `6000.3.21f1`, BepInEx `6.0.0-be.788` (IL2CPP / net6), and Windows D3D11.
 
 ## License
 

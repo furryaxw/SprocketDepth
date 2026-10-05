@@ -1,5 +1,7 @@
 # 故障排查
 
+**中文** | [English](troubleshooting.en.md)
+
 | 症状 | 高概率原因 | 检查 |
 |---|---|---|
 | 重复缩小画面、像分形 | 把 packed mip atlas 整张显示 | 不要直接 Copy `_CameraDepthTexture`；使用线性化输出纹理 |

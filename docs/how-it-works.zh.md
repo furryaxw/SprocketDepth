@@ -1,5 +1,7 @@
 # 实现原理
 
+**中文** | [English](how-it-works.en.md)
+
 ## 数据流
 
 ```text

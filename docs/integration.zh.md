@@ -1,5 +1,7 @@
 # IL2CPP / Custom Pass 接入
 
+**中文** | [English](integration.en.md)
+
 ## 推荐注入设置
 
 ```csharp

@@ -1,5 +1,7 @@
 # 兼容性与限制
 
+**中文** | [English](compatibility.en.md)
+
 ## 已验证基线
 
 | 项目 | 版本 / 后端 |
