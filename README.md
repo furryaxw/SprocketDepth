@@ -63,7 +63,7 @@ dotnet build .\SprocketDepth.csproj --configuration Release
 - [兼容性与限制](docs/compatibility.md)
 - [故障排查](docs/troubleshooting.md)
 
-当前验证环境为 Sprocket `0.2.53.2`、Unity `2022.3.62f2`、MelonLoader `0.7.2/net6` 和 Windows D3D11。
+当前验证环境为 Sprocket `0.2.55.5`、Unity `6000.3.21f1`、BepInEx `6.0.0-be.788`（IL2CPP / net6）和 Windows D3D11。
 
 ## License
 

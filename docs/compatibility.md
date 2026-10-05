@@ -4,14 +4,14 @@
 
 | 项目 | 版本 / 后端 |
 |---|---|
-| 游戏 | Sprocket 0.2.53.1 / 0.2.53.2 |
-| Unity | 2022.3.62f2 |
-| HDRP | Unity 2022.3 对应 HDRP 14 系列 |
-| MelonLoader | 0.7.2, net6 |
+| 游戏 | Sprocket 0.2.55.5 |
+| Unity | 6000.3.21f1 |
+| HDRP | Unity 6 对应的 HDRP 版本 |
+| BepInEx | 6.0.0-be.788（IL2CPP）, net6 |
 | 图形后端 | Windows D3D11 |
 | 输出维度 | 单 slice `Tex2DArray` |
 
-`0.1.2` 的两个构造函数都已在 Sprocket `0.2.53.2` 中通过 LaserRangefinder 与 Thermal 宿主验证，深度图输出已由用户确认游戏内可用。
+`1.0.0` 的两个构造函数都已在 Sprocket `0.2.55.5` 中通过 LaserRangefinder 宿主验证，深度图输出已由用户确认游戏内可用。
 
 ## 非稳定 HDRP 契约
 
