@@ -36,24 +36,25 @@ var normalizedDepth = depth.NormalizedDepthTexture;
 
 调用者负责选择 Camera、创建 Custom Pass、决定注入时机，并在最后一个 GPU 命令完成后调用 `Dispose()`。
 
-作为其他 MelonLoader 模组的依赖时，将 `SprocketDepth.dll` 放入游戏根目录的 `UserLibs` 文件夹。
+作为其他插件的依赖时，把 `SprocketDepth.dll` 放在 `BepInEx\plugins` 目录。
 
 ## 构建
 
-项目目标框架为 .NET 6，并引用本地 Sprocket MelonLoader/IL2CPP 程序集。默认目录布局为：
+项目目标框架为 .NET 6，并引用本地 Sprocket BepInEx/IL2CPP 程序集。默认目录布局为：
 
 ```text
-G:\Sprocket\
-├── MelonLoader\
-├── UserLibs\
-└── mod\SprocketDepth\
+G:\Sprocket0.2.55.5\
+├── BepInEx\
+│   ├── core\
+│   └── plugins\
+└── mods\SprocketDepth\
 ```
 
 ```powershell
 dotnet build .\SprocketDepth.csproj --configuration Release
 ```
 
-默认构建会将 DLL 部署到 `UserLibs`。使用 `-p:SkipLibraryDeploy=true` 可以只生成 DLL；仓库位于其他位置时可通过 `-p:SprocketGameRoot="G:\Sprocket"` 指定游戏根目录。
+默认构建会把 DLL 部署到 `BepInEx\plugins`。使用 `-p:SkipLibraryDeploy=true` 可以只生成 DLL；仓库位于其他位置时可通过 `-p:SprocketGameRoot="G:\Sprocket0.2.55.5"` 指定游戏根目录。
 
 ## 文档
 

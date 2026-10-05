@@ -82,7 +82,7 @@ if (depth.TryRecord(context, DepthMapOutput.TextureOnly))
 推荐位置：
 
 ```text
-G:\Sprocket\UserLibs\SprocketDepth.dll
+G:\Sprocket0.2.55.5\BepInEx\plugins\SprocketDepth.dll
 ```
 
 宿主模组项目添加：
